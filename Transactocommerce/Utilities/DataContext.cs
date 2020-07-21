@@ -19,6 +19,15 @@ namespace Transactocommerce.Utilities
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) =>
             optionsBuilder.UseNpgsql(_configuration.GetSection("ConnectionString").Value);
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            // Category table
+            // Unique category
+            modelBuilder.Entity<Category>()
+                .HasIndex(p => p.Name)
+                .IsUnique();
+        }
+
         public DbSet<Product> Products { get; set; }
         public DbSet<Category> Categories { get; set; }
     }

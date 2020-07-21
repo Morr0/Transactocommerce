@@ -7,10 +7,12 @@ using System.Threading.Tasks;
 
 namespace Transactocommerce.Models
 {
-    public class Category
+    public class Category // Use it for read/write DTOs
     {
+        [Key]
         public string Id { get; set; } = Guid.NewGuid().ToString();
 
+        // Made unique in the DataContext
         [NotNull]
         [Required]
         public string Name { get; set; }

@@ -16,5 +16,10 @@ namespace Transactocommerce.Models
         [NotNull]
         [Required]
         public string Name { get; set; }
+
+        [NotNull]
+        public string Description { get; set; }
+
+        public DateTime Timestamp { get; set; } = DateTime.UtcNow;
     }
 }

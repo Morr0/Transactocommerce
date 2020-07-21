@@ -23,8 +23,7 @@ namespace Transactocommerce.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            //Product en = await _context.Products.FirstOrDefaultAsync();
-            return Ok();
+            return Ok(await _context.Products.ToArrayAsync());
         }
 
         [HttpPost]
@@ -36,7 +35,7 @@ namespace Transactocommerce.Controllers
                 await _context.SaveChangesAsync();
             } catch (DbUpdateException)
             {
-                return BadRequest("MMM");
+                return Conflict();
             }
 
             return Ok();

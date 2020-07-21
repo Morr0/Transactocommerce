@@ -63,5 +63,7 @@ namespace Transactocommerce.Models
         public string CategoryId { get; set; }
 
         public int Stock { get; set; } = 0;
+
+        public DateTime Timestamp { get; set; } = DateTime.UtcNow;
     }
 }

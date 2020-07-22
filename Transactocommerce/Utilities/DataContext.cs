@@ -21,6 +21,12 @@ namespace Transactocommerce.Utilities
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            // Product table
+            // Foreign key relationship 1 - 1 (product-category)
+            //modelBuilder.Entity<Product>()
+              //  .HasOne(p => p.)
+
+
             // Category table
             // Unique category
             modelBuilder.Entity<Category>()
@@ -28,7 +34,7 @@ namespace Transactocommerce.Utilities
                 .IsUnique();
         }
 
-        public DbSet<Product> Products { get; set; }
-        public DbSet<Category> Categories { get; set; }
+        public DbSet<Product> Product { get; set; }
+        public DbSet<Category> Category { get; set; }
     }
 }

@@ -22,13 +22,13 @@ namespace Transactocommerce.Controllers
         [HttpGet]
         public async Task<IActionResult> GetCategories()
         {
-            return Ok(await _context.Categories.AsNoTracking().ToListAsync());
+            return Ok(await _context.Category.AsNoTracking().ToListAsync());
         }
 
         [HttpPost]
         public async Task<IActionResult> AddCategory([FromBody] Category category)
         {
-            await _context.Categories.AddAsync(category);
+            await _context.Category.AddAsync(category);
             try
             {
                 await _context.SaveChangesAsync();

@@ -39,7 +39,7 @@ namespace Transactocommerce.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("Categories");
+                    b.ToTable("Category");
                 });
 
             modelBuilder.Entity("Transactocommerce.Models.Product", b =>
@@ -48,6 +48,7 @@ namespace Transactocommerce.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("CategoryId")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Description")
@@ -70,9 +71,23 @@ namespace Transactocommerce.Migrations
                     b.Property<int>("Stock")
                         .HasColumnType("integer");
 
+                    b.Property<DateTime>("Timestamp")
+                        .HasColumnType("timestamp without time zone");
+
                     b.HasKey("Id");
 
-                    b.ToTable("Products");
+                    b.HasIndex("CategoryId");
+
+                    b.ToTable("Product");
+                });
+
+            modelBuilder.Entity("Transactocommerce.Models.Product", b =>
+                {
+                    b.HasOne("Transactocommerce.Models.Category", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

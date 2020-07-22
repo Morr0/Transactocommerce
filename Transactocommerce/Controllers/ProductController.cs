@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -15,21 +16,25 @@ namespace Transactocommerce.Controllers
     public class ProductController : ControllerBase
     {
         private DataContext _context;
-        public ProductController(DataContext context)
+        private IMapper _mapper;
+        public ProductController(DataContext context, IMapper mapper)
         {
-            this._context = context;
+            _context = context;
+            _mapper = mapper;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            return Ok(await _context.Products.ToArrayAsync());
+            List<Product> _products = await _context.Product.ToListAsync();
+            return Ok(_mapper.Map<List<ProductReadDTO>>(_products));
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add([FromBody] Product product)
+        public async Task<IActionResult> Add([FromBody] ProductWriteDTO _product)
         {
-            await _context.Products.AddAsync(product);
+            Product product = _mapper.Map<Product>(_product);
+            await _context.Product.AddAsync(product);
             try
             {
                 await _context.SaveChangesAsync();

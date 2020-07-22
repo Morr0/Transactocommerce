@@ -35,6 +35,19 @@ namespace Transactocommerce.Controllers
             return Ok(_mapper.Map<List<ProductReadDTO>>(list));
         }
 
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById([FromRoute] string id)
+        {
+            Product product = await _context.Product.AsNoTracking()
+                .FirstOrDefaultAsync(p => p.Id == id);
+            if (product != null)
+            {
+                return Ok(_mapper.Map<ProductReadDTO>(product));
+            }
+
+            return NotFound();
+        }
+
         [HttpPost]
         public async Task<IActionResult> Add([FromBody] ProductWriteDTO _product)
         {
@@ -48,7 +61,7 @@ namespace Transactocommerce.Controllers
                 return Conflict();
             }
 
-            return Ok();
+            return Ok(_mapper.Map<ProductReadDTO>(product));
         }
     }
 }

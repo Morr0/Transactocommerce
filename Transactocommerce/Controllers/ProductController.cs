@@ -6,6 +6,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Transactocommerce.Controllers.Queiries;
 using Transactocommerce.Models;
 using Transactocommerce.Utilities;
 
@@ -24,10 +25,14 @@ namespace Transactocommerce.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetMany([FromQuery] ProductQuery query)
         {
-            List<Product> _products = await _context.Product.ToListAsync();
-            return Ok(_mapper.Map<List<ProductReadDTO>>(_products));
+            IQueryable<Product> products = _context.Product.AsNoTracking();
+            products = products.Skip(query.Size * (query.Page))
+                .Take(query.Size); // Pagination
+
+            List<Product> list = await products.ToListAsync();
+            return Ok(_mapper.Map<List<ProductReadDTO>>(list));
         }
 
         [HttpPost]

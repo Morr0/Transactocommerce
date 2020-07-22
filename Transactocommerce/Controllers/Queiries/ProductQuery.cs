@@ -3,11 +3,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Transactocommerce.Models;
 
 namespace Transactocommerce.Controllers.Queiries
 {
     public class ProductQuery
     {
+        #region Pagination
         private const int _defaultPage = 0;
         private int _page = _defaultPage;
 
@@ -44,5 +46,14 @@ namespace Transactocommerce.Controllers.Queiries
                     _size = Math.Min(_maxSize, value);
             }
         }
+
+        #endregion
+
+        #region ByCategory
+        // Denotes no category, fetch all
+        private const string _defaultCategoryId = null;
+
+        public string CategoryId { get; set; } = _defaultCategoryId;
+        #endregion
     }
 }

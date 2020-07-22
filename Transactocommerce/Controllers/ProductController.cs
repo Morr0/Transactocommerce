@@ -28,8 +28,20 @@ namespace Transactocommerce.Controllers
         public async Task<IActionResult> GetMany([FromQuery] ProductQuery query)
         {
             IQueryable<Product> products = _context.Product.AsNoTracking();
+            // Pagination
             products = products.Skip(query.Size * (query.Page))
-                .Take(query.Size); // Pagination
+                .Take(query.Size);
+
+            // By Category Id
+            if (!string.IsNullOrEmpty(query.CategoryId))
+            {
+                // Check if category exists
+                if (await _context.Category.AsNoTracking()
+                    .FirstOrDefaultAsync(p => p.Id == query.CategoryId) == null)
+                    return NotFound();
+
+                products = products.Where(p => p.CategoryId == query.CategoryId);
+            }
 
             List<Product> list = await products.ToListAsync();
             return Ok(_mapper.Map<List<ProductReadDTO>>(list));

@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using Transactocommerce.Controllers.Queiries;
 using Transactocommerce.Models;
 using Transactocommerce.Utilities;
@@ -45,6 +47,29 @@ namespace Transactocommerce.Controllers
 
             List<Product> list = await products.ToListAsync();
             return Ok(_mapper.Map<List<ProductReadDTO>>(list));
+        }
+
+        [HttpGet("many")]
+        public async Task<IActionResult> GetManyById([FromBody] JsonElement items)
+        {
+            if (items.ValueKind == JsonValueKind.Array)
+            {
+                Console.WriteLine("Array");
+                int length = items.GetArrayLength();
+                if (length == 0)
+                    return BadRequest();
+
+                List<string> ids = new List<string>(length);
+                foreach (JsonElement item in items.EnumerateArray())
+                    ids.Add(item.GetString());
+
+                List<Product> list = await _context.Product.AsNoTracking()
+                    .Where(p => ids.Contains(p.Id))
+                    .ToListAsync();
+                return Ok(_mapper.Map<List<ProductReadDTO>>(list));
+            }
+
+            return BadRequest();
         }
 
         [HttpGet("{id}")]

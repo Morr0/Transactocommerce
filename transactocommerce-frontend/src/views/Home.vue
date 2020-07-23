@@ -9,7 +9,7 @@
 
       <br>
       Items
-      <ul>
+      <ul v-if="products">
           <li v-for="product in products" :key="product.id">
               <span>Name: {{product.name}}, manufactured by: {{product.manufacturer}}</span>
               <br>
@@ -19,8 +19,11 @@
               <br>
               <span>{{product.stock}} in stock.</span>
               <br>
+              <a v-if="product.stock > 0" href="" @click.prevent="addToStock(product.id)">Add to cart</a>
+              <br>
           </li>
       </ul>
+      <ul v-else>Empty Here</ul>
       
   </div>
 </template>
@@ -49,6 +52,9 @@ export default {
       getProductsOfCategory: async function (id){
           const res = await fetch(`https://localhost:5001/api/product?categoryId=${id}`);
           this.products = await res.json();
+      },
+      addToStock: function (id){ // Assumes exists
+          this.$store.commit("addProduct", id);
       }
   },
   mounted(){

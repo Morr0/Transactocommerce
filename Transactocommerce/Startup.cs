@@ -34,7 +34,7 @@ namespace Transactocommerce
             // CORS
             services.AddCors(options =>
             {
-                options.AddDefaultPolicy(policy => policy.AllowAnyOrigin());
+                options.AddDefaultPolicy(policy => policy.AllowAnyOrigin().AllowAnyHeader());
             });
 
         }

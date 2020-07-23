@@ -49,12 +49,12 @@ namespace Transactocommerce.Controllers
             return Ok(_mapper.Map<List<ProductReadDTO>>(list));
         }
 
-        [HttpGet("many")]
+        [HttpPost("many")]
         public async Task<IActionResult> GetManyById([FromBody] JsonElement items)
-        {
+        { 
             if (items.ValueKind == JsonValueKind.Array)
             {
-                Console.WriteLine("Array");
+                Console.WriteLine(items.GetRawText());
                 int length = items.GetArrayLength();
                 if (length == 0)
                     return BadRequest();

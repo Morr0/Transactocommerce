@@ -11,6 +11,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Transactocommerce.Services;
+using Transactocommerce.Services.Interfaces;
 using Transactocommerce.Utilities;
 
 namespace Transactocommerce
@@ -30,6 +32,8 @@ namespace Transactocommerce
             services.AddControllers();
             services.AddDbContext<DataContext>();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+            services.AddSingleton<IPaymentSystem, PaymentSystem>();
 
             // CORS
             services.AddCors(options =>

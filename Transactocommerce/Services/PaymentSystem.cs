@@ -73,11 +73,6 @@ namespace Transactocommerce.Services
                     {
                         Order order = JsonSerializer.Deserialize<Order>(message.Body);
 
-                        // Set values to mark a complete order
-                        order.Complete = true;
-                        order.Failed = false;
-                        order.OrderConfirmTime = DateTime.UtcNow;
-
                         return order;
                     }
                 } 

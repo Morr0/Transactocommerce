@@ -32,9 +32,15 @@ namespace Transactocommerce.Utilities
             modelBuilder.Entity<Category>()
                 .HasIndex(p => p.Name)
                 .IsUnique();
+
+            // Order table
+            // Index on transaction id
+            modelBuilder.Entity<Order>()
+                .HasIndex(p => p.TransactionId);
         }
 
         public DbSet<Product> Product { get; set; }
         public DbSet<Category> Category { get; set; }
+        public DbSet<Order> Order { get; set; }
     }
 }

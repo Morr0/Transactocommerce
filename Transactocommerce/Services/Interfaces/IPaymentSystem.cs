@@ -6,7 +6,7 @@ using Transactocommerce.Models;
 
 namespace Transactocommerce.Services.Interfaces
 {
-    interface IPaymentSystem
+    public interface IPaymentSystem
     {
         void StartPayment(Order order);
         void CompletePayment(string transactionId, out Order order);

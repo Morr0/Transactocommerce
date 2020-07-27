@@ -17,8 +17,7 @@ namespace Transactocommerce.Models
         // Human readable ID
         public long OrderNo { get; set; }
 
-        [ForeignKey("Products")]
-        public List<Product> Products { get; set; }
+        public List<string> ProductsIds { get; set; } = new List<string>();
 
         [Required]
         [NotNull]
@@ -36,6 +35,14 @@ namespace Transactocommerce.Models
         [NotNull]
         public string TransactionId { get; set; }
 
-        public DateTime OrderConfirmTime { get; set; } = DateTime.UtcNow;
+        // A complete order implies that it was handled by the PaymentSystem webhook method
+        public bool Complete { get; set; } = false;
+
+        // An order can be completed but failed to happen because of maybe no payment was allowed
+        public bool Failed { get; set; }
+
+        public DateTime OrderStartTime { get; set; }
+
+        public DateTime OrderConfirmTime { get; set; }
     }
 }

@@ -14,6 +14,7 @@ namespace Transactocommerce.Services
 {
     public class PaymentSystem : IPaymentSystem
     {
+        private static string queueURL = "https://sqs.ap-southeast-2.amazonaws.com/472971161478/transactocommerce";
         private AmazonSQSClient _sqsClient;
         public PaymentSystem()
         {
@@ -26,7 +27,7 @@ namespace Transactocommerce.Services
         {
             SendMessageRequest sendMessageRequest = new SendMessageRequest
             {
-                QueueUrl = "https://sqs.ap-southeast-2.amazonaws.com/472971161478/transactocommerce",
+                QueueUrl = queueURL,
                 MessageBody = JsonSerializer.Serialize(order),
                 MessageAttributes = new Dictionary<string, MessageAttributeValue>()
                 {
@@ -55,11 +56,12 @@ namespace Transactocommerce.Services
             ReceiveMessageRequest receiveMessageRequest = new ReceiveMessageRequest
             {
                 MaxNumberOfMessages = 1,
-                QueueUrl = "https://sqs.ap-southeast-2.amazonaws.com/472971161478/transactocommerce",
+                QueueUrl = queueURL,
                 MessageAttributeNames = new List<string> { "id" },
             };
             ReceiveMessageResponse response = await _sqsClient.ReceiveMessageAsync(receiveMessageRequest);
 
+            //
             if (response.HttpStatusCode == HttpStatusCode.OK)
             {
                 // Even though requesting one item, just to reduce unnecessary checks
@@ -72,6 +74,15 @@ namespace Transactocommerce.Services
                     if (id == transactionId)
                     {
                         Order order = JsonSerializer.Deserialize<Order>(message.Body);
+
+                        // Try deleting the message from the queue after successful consumption
+                        try
+                        {
+                            await _sqsClient.DeleteMessageAsync(queueURL, message.ReceiptHandle);
+                        } catch (AmazonSQSException e)
+                        {
+                            Console.WriteLine(e);
+                        }
 
                         return order;
                     }

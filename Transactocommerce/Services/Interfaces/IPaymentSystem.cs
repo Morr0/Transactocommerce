@@ -9,6 +9,6 @@ namespace Transactocommerce.Services.Interfaces
     public interface IPaymentSystem
     {
         void StartPayment(Order order);
-        void CompletePayment(string transactionId, out Order order);
+        Task<Order> CompletePayment(string transactionId);
     }
 }

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Transactocommerce.Models;
 using Transactocommerce.Services.Interfaces;
+using Transactocommerce.Utilities;
 
 namespace Transactocommerce.Controllers
 {
@@ -16,13 +17,15 @@ namespace Transactocommerce.Controllers
     public class PaymentController : ControllerBase
     {
         private IPaymentSystem _system;
-        public PaymentController(IPaymentSystem system)
+        private DataContext _context;
+        public PaymentController(IPaymentSystem system, DataContext context)
         {
             _system = system;
+            _context = context;
         }
 
         [HttpPost("start")]
-        public async Task<IActionResult> StartPayment([FromHeader] string transaction_id, [FromHeader] string name,
+        public async Task<IActionResult> StartPayment([FromHeader] string id, [FromHeader] string name,
             [FromHeader] string email, [FromHeader] string address, [FromBody] JsonElement data)
         {
             // data should have an array of orders
@@ -35,7 +38,7 @@ namespace Transactocommerce.Controllers
 
             Order _order = new Order 
             { 
-                TransactionId = transaction_id,
+                TransactionId = id,
                 Name = name,
                 Email = email,
                 Address = address
@@ -52,7 +55,19 @@ namespace Transactocommerce.Controllers
 
             // Add to payment manager waiting for the payment processor's webhook
             _system.StartPayment(_order);
-            return Ok();
+            // Returns id of order so that it can be used to track the order when a webhook is recieved
+            return Ok(_order.Id);
+        }
+
+        [HttpPost("webhook")]
+        // This is sent from the front end as a response from the front end's payment handler
+        public async Task<IActionResult> Webhook([FromHeader] string id)
+        {
+            Order order = await _system.CompletePayment(id);
+            if (order == null)
+                return BadRequest();
+
+            return Ok(order);
         }
     }
 }

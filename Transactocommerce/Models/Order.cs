@@ -39,9 +39,10 @@ namespace Transactocommerce.Models
         public bool Complete { get; set; } = false;
 
         // An order can be completed but failed to happen because of maybe no payment was allowed
-        public bool Failed { get; set; }
+        // default -> true -> in case nothing happens
+        public bool Failed { get; set; } = true;
 
-        public DateTime OrderStartTime { get; set; }
+        public DateTime OrderStartTime { get; set; } = DateTime.UtcNow;
 
         public DateTime OrderConfirmTime { get; set; }
     }

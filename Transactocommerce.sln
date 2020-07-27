@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30225.117
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Transactocommerce", "Transactocommerce\Transactocommerce.csproj", "{1DC6CD6A-31B5-4EB8-BC62-389D39778F6C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Transactocommerce", "Transactocommerce\Transactocommerce.csproj", "{1DC6CD6A-31B5-4EB8-BC62-389D39778F6C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
